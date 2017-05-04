@@ -6,6 +6,9 @@ import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.HashMap;
+
+
 
 /**
  * Created by Varun on 5/2/2017.
@@ -51,15 +54,28 @@ public class Triangulation {
         Double iter;
         Double curMin = (Double) this.min;
 
-        List<Double> horizontalData = new ArrayList<Double>();
-        for (Double lattitude:
-             this.lattitude) {
-            if(abs(lattitude - (Double)setPoint) <= curMin){
-                horizontalData.add(lattitude);
-            }
+        int arraySize = this.lattitude.size();
+
+        //List<Double> horizontalData = new ArrayList<Double>();
+        HashMap<Double,Double> horizontalData = new HashMap<>();
+
+        if(this.lattitude.size() != this.RSSI.size()){
+            System.out.println("WTF This shit isn't supposed to happen");
+            return;
         }
 
-        //Do something with RSSI
+        //Iterate through the list and get the data for partial derivatives
+       for(int i = 0; i < arraySize; i++){
+           double lattitude = this.lattitude.get(i);
+           double RSSI = this.RSSI.get(i);
+           if((lattitude - (Double)setPoint) <= curMin)
+               horizontalData.put(lattitude,RSSI);
+       }
+
+        //Take triangulation data points
+        //Compare RSSI values
+
+        //Compare lattitudes
         
     }
 
@@ -76,10 +92,12 @@ public class Triangulation {
         Double curMin = (Double)this.min;
 
         List<Double> verticalData = new ArrayList<Double>();
+        List<Double> verticalSignalStrength = new ArrayList<Double>();
         for (Double longitude:
              this.longitude) {
-            if(abs(longitude - setPoint) <= curMin)
+            if(abs(longitude - setPoint) <= curMin) {
                 verticalData.add(longitude);
+            }
         }
     }
 
@@ -100,3 +118,5 @@ public class Triangulation {
     }
 
 }
+
+
